@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Your Name
+ * Copyright (c) 2025 Yijia Cao
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -16,12 +16,29 @@ module tt_um_example (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-  // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
-  assign uio_out = 0;
-  assign uio_oe  = 0;
+    wire [15:0] In;      // Concatenated input
+    assign In = {ui_in, uio_in};  // In[15:0] = {A[7:0], B[7:0]}
 
-  // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, 1'b0};
-
+    always @(*) begin
+        casez (In)  
+            16'b1???????????????: uo_out = 8'd15;
+            16'b01??????????????: uo_out = 8'd14;
+            16'b001?????????????: uo_out = 8'd13;
+            16'b0001????????????: uo_out = 8'd12;
+            16'b00001???????????: uo_out = 8'd11;
+            16'b000001??????????: uo_out = 8'd10;
+            16'b0000001?????????: uo_out = 8'd9;
+            16'b00000001????????: uo_out = 8'd8;
+            16'b000000001???????: uo_out = 8'd7;
+            16'b0000000001??????: uo_out = 8'd6;
+            16'b00000000001?????: uo_out = 8'd5;
+            16'b000000000001????: uo_out = 8'd4;
+            16'b0000000000001???: uo_out = 8'd3;
+            16'b00000000000001??: uo_out = 8'd2;
+            16'b000000000000001?: uo_out = 8'd1;
+            16'b0000000000000001: uo_out = 8'd0;
+            16'b0000000000000000: uo_out = 8'b11110000; // Special case
+            default: uo_out = 8'b00000000;
+        endcase
+    end
 endmodule
